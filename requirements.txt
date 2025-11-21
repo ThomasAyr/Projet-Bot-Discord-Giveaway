@@ -1,0 +1,8 @@
+discord.py
+gspread
+google-auth
+moviepy==1.0.3
+pillow==9.5.0 
+requests
+ffmpeg-python
+python-dotenv
