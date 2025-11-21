@@ -100,10 +100,16 @@ def generer_image_avec_date(texte: str | None = None):
         w_t = h_t = 0  # pas utilisé
 
     # --- Police date ---
-    try:
-        font_date = ImageFont.truetype(FONT_PATH, FONT_SIZE_DATE)
-    except Exception:
-        font_date = ImageFont.load_default()
+    if titre_special:
+        try:
+            font_date = ImageFont.truetype(FONT_PATH, FONT_SIZE_DATE)
+        except Exception:
+            font_date = ImageFont.load_default()
+    else:
+        try:
+            font_date = ImageFont.truetype(FONT_PATH, int(FONT_SIZE_DATE * 1.15))
+        except Exception:
+            font_date = ImageFont.load_default()
     w_d, h_d = get_size(texte_date, font_date)
 
     # --- Calcul des positions ---
@@ -137,82 +143,3 @@ def generer_image_avec_date(texte: str | None = None):
     img.save(buf, format="PNG")
     buf.seek(0)
     return buf
-
-def creer_video_roulette(
-    background_path: str = "C:/Users/thoma/OneDrive/Bureau/cal2025/pied.png",
-    roue_path: str  ="C:/Users/thoma/OneDrive/Bureau/cal2025/roue.png",
-    fleche_path: str = "C:/Users/thoma/OneDrive/Bureau/cal2025/fleche.png",
-    output_path: str = "C:/Users/thoma/OneDrive/Bureau/cal2025/roulette.mp4",
-    taille: int = 600,
-    vitesse_max: float = 100.0,        # degrés / sec au départ
-    duree_rotation: float | None = None,# si None → aléatoire entre 6 et 20 s
-    duree_pause: float = 4.0,           # pause finale (s)
-    fps: int = 30,
-    seed: int | None = None
-) -> str:
-    """
-    Génère une vidéo de roulette qui décélère puis reste en pause.
-
-    Retourne le chemin du fichier vidéo généré.
-    """
-
-    # Sécurité chemins
-    for p in [background_path, roue_path, fleche_path]:
-        if not Path(p).exists():
-            raise FileNotFoundError(f"Fichier introuvable: {p}")
-
-    if seed is not None:
-        random.seed(seed)
-
-    if duree_rotation is None:
-        duree_rotation = round(random.uniform(6, 20), 3)
-
-    # Charger et redimensionner
-    background = ImageClip(background_path).resize((taille, taille))
-    roue = ImageClip(roue_path).resize((taille, taille))
-    fleche = ImageClip(fleche_path).resize((taille, taille)).set_position(("center", 10))
-
-    # Décélération exponentielle (même formule que ton script)
-    def angle_a_t(t: float) -> float:
-        return vitesse_max * (0.999999 ** t) * t
-
-    # Image finale déjà calculée pour la pause
-    angle_final = angle_a_t(duree_rotation)
-    roue_finale = roue.rotate(angle_final)  # interpolation par défaut
-    frame_finale = CompositeVideoClip([
-        background,
-        roue_finale.set_position(("center", "center")),
-        fleche
-    ]).get_frame(0)
-
-    def make_frame(t: float):
-        if t <= duree_rotation:
-            angle = angle_a_t(t)
-            roue_rotated = roue.rotate(angle)
-            frame = CompositeVideoClip([
-                background,
-                roue_rotated.set_position(("center", "center")),
-                fleche
-            ]).get_frame(0)
-        else:
-            frame = frame_finale
-        return frame
-
-    # Durée totale = rotation + pause
-    duration = duree_rotation + duree_pause
-    clip = VideoClip(make_frame, duration=duration)
-
-    try:
-        clip.write_videofile(output_path, fps=fps)
-    finally:
-        # Libérer proprement
-        clip.close()
-        background.close()
-        roue.close()
-        fleche.close()
-        try:
-            roue_finale.close()
-        except Exception:
-            pass
-
-    return str(Path(output_path).resolve())

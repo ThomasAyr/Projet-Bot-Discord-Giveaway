@@ -459,7 +459,7 @@ async def send_message():
         elif now.hour == heure_fin_participation and now.minute == 0:
             channel = bot.get_channel(CHANNEL_PARTICIPATION)
             if channel:
-                await channel.send(f"Fin des participations pour ce {get_today_str()} décembre. Les tirages au sort ont lieu en ce moment. Restez connectés pour découvrir les heureux gagnants ! 🎁")
+                await channel.send(f"Fin des participations du {get_today_str()} décembre. Les tirages au sort ont lieu en ce moment. Restez connectés pour découvrir les heureux gagnants ! 🎁")
 
 @bot.event
 async def on_guild_join(guild):
