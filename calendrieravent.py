@@ -312,7 +312,7 @@ async def draw_lots_task():
                 )
 
                 # Envoi de la vidéo
-                video_path = r"cal2025/roulette.mp4" #creer_video_roulette()
+                video_path = rf"cal2025/roulettes/roulette_{now.day}.mp4"
                 with open(video_path, "rb") as f:
                     await channel.send(file=discord.File(f, "roulette.mp4"))
 
