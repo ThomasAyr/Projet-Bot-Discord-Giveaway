@@ -64,32 +64,33 @@ jours_speciaux = {
 
 # ---- QUESTIONS DU CALENDRIER ----
 QUESTIONS = {
-    1:  "Quel est ton plus beau souvenir de Noël sur Transformice ou ailleurs ? 🎄",
-    2:  "Si tu pouvais offrir un cadeau à toute la communauté, ce serait quoi ? 🎁",
-    3:  "Plutôt chocolat chaud, thé, café… ou autre boisson de saison ? ☕",
-    4:  "Quel est ton item ou ta fourrure préférée en jeu, et pourquoi ? 🐭",
-    5:  "Quelle musique ou chanson te met immédiatement dans l’ambiance de Noël ? 🎶",
+    1:  "Quel est ton meilleur souvenir de Noël, en jeu ou IRL ? 🎄",
+    2:  "Qu’est-ce que tu aimes le plus dans la communauté Transformice ? 🐭",
+    3:  "En hiver, tu es plutôt chocolat chaud, thé ou café ? ☕",
+    4:  "Quel item ou quelle fourrure tu utilises le plus ? 🧀",
+    5:  "Quelle musique te met directement dans l’ambiance de Noël ? 🎶",
     6:  "Raconte une petite anecdote drôle qui t’est arrivée pendant les fêtes. 😺",
-    7:  "Tu préfères recevoir un cadeau-surprise ou choisir toi-même ? 🎲",
-    8:  "Si tu pouvais créer une nouvelle carte spéciale Noël, à quoi elle ressemblerait ? 🧊",
-    9:  "Quel est ton dessert de fêtes préféré ? 🍰",
-    10: "Si tu étais un PNJ de Noël dans Transformice, quel serait ton rôle ? 🎅",
-    11: "Tu joues plutôt en solo, en duo ou avec un gros groupe d’amis ? 👥",
-    12: "Quelle est ta tradition de fin d’année que tu ne rates jamais ? ⭐",
-    13: "Si tu pouvais passer une journée entière avec un seul joueur, qui choisirais-tu ? 💫",
-    14: "Quel est le plus beau cadeau que tu aies reçu (ou offert) ? 🎀",
-    15: "Plutôt maps normales, fun, event ou bootcamp pendant les vacances ? 🧀",
-    16: "Si tu devais décrire ton année 2025 en un seul mot, ce serait lequel ? ✨",
-    17: "Quelle est ta tenue / ton look préféré pour les fêtes (en jeu et IRL) ? 👗",
-    18: "Tu préfères organiser des événements ou simplement y participer ? 🎉",
-    19: "Si tu pouvais avoir une gourmandise à volonté,  laquelle choisirais-tu ? 💫",
-    20: "Quelle est la chose la plus cosy pour toi en hiver ? 🛋️",
-    21: "Plutôt chocolat chaud, thé, café... ou autre boisson de saison ? ☕",#"As-tu déjà fait une rencontre marquante grâce au jeu ? Raconte ! 💌",
-    22: "Si tu pouvais transformer le gameplay en version Noël, que ferrais-tu ? 🧊",
-    23: "Quel est ton objectif de souris pour l’année prochaine ? 🐭",
-    24: "Quelle surprise de Noël t’a le plus marqué·e dans ta vie ? 🎇",
-    25: "Que voudrais-tu dire à toute la communauté pour ce 25 décembre ? 💝",
+    7:  "Tu préfères un cadeau-surprise ou savoir à l’avance ce que tu reçois ? 🎁",
+    8:  "Quelle est ta décoration de Noël préférée ? ✨",
+    9:  "Quel est ton dessert de Noël préféré ? 🍰",
+    10: "Si tu étais un PNJ de Noël dans Transformice, tu prendrais lequel ? 🎅",
+    11: "Comment as-tu découvert Transformice pour la première fois ? 🐭",
+    12: "Quelle tradition de fin d’année aimes-tu le plus ? ❄️",
+    13: "Quel est ton film ou dessin animé de Noël préféré ? 🎬",
+    14: "Quel cadeau t’a le plus marqué, reçu ou offert ? 🎀",
+    15: "Pendant les vacances, tu joues plutôt quel type de map ? 🧀",
+    16: "Décris ton année 2025 avec un seul mot. ✨",
+    17: "C’est quoi ton look préféré pour les fêtes (en jeu ou IRL) ? 👗",
+    18: "Plutôt sucré ou salé pendant les fêtes ? 🍭",
+    19: "Si tu pouvais avoir une gourmandise à volonté, laquelle ce serait ? 💫",
+    20: "C’est quoi la chose la plus cosy pour toi en hiver ? 🛋️",
+    21: "Quel est ton endroit préféré pour te détendre en hiver ? ❄️",
+    22: "Tu préfères quelle map de l'événement de Noël 2025 ? 🎄",
+    23: "Quel mode de jeu tu joues le plus en ce moment sur Transformice ? 🎮",
+    24: "Est-ce que tu fêtes Noël ou pas ? Si oui, comment ? 🎄",
+    25: "Quel message tu voudrais laisser à toute la communauté pour Noël ? 💝",
 }
+
 
 def get_today_question():
     """Retourne la question du jour (1–25), ou None si hors période."""
@@ -254,6 +255,36 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+quetes = {
+  "6": {
+    "evenement": "Saint Nicolas",
+    "objectif": "Résoudre le labyrinthe ci-dessous puis l’envoyer en MP à un organisateur.",
+    "recompense": "Un item au choix pour les trois premiers à l'envoyer correctement.",
+    "photo": "cal2025/laby.png"
+  },
+  "8": {
+    "evenement": "Fête des lumières",
+    "objectif": "Créer une tenue sur le thème de la lumière et l’envoyer en même temps que sa #participation. *Participations acceptées jusqu’à demain soir 21:59*",
+    "recompense": "Un item au choix pour les plus trois plus belles tenues."
+  }
+  ,
+  "21": {
+    "evenement": "Arrivée de l’hiver",
+    "objectif": "Écrire un haïku sur le thème de l’hiver et le poster en même temps que sa #participation. *Participations acceptées jusqu’à demain soir 21:59*",
+    "recompense": "Un item au choix pour les trois plus beaux haïkus sélectionnés."
+  },
+  "24": {
+    "evenement": "Réveillon de Noël",
+    "objectif": "Poster une photo de votre sapin (ou celui de votre ville) en même temps que sa #participation. *Participations acceptées jusqu’au 25 décembre à 21:59.*",
+    "recompense": "Un item au choix pour les trois plus belles photos."
+  },
+  "25": {
+    "evenement": "Jour de Noël",
+    "objectif": "Poster une photo de votre sapin (ou celui de votre ville) en même temps que sa #participation.",
+    "recompense": "Un item au choix pour les trois plus belles photos."
+  }
+}
+
 # ---- TÂCHE QUOTIDIENNE ----
 @tasks.loop(minutes=1)  # vérifie chaque minute
 async def draw_lots_task():
@@ -270,6 +301,7 @@ async def draw_lots_task():
             await channel.send(file=file)
 
             await channel.send(
+                f"<:space:1360661681583165470>\n"
                 f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str()} décembre :confetti_ball:\n"
                 f"Ce soir, **{nb_participants} participants** ont tenté leur chance pour être tiré au sort ! "
                 f"**Plusieurs lots sont en jeu**, et la tension monte à **chaque pseudonyme annoncé**... "
@@ -334,13 +366,19 @@ async def draw_lots_task():
 
             # ---- Envoi de la quête surprise ----
             if now.day in jours_speciaux:
-                question_surprise = f"## :sparkles: La quête surprise du {get_today_str()} décembre 🙀\n"
-                question_surprise += f"Pour célébrer ce jour spécial {jours_speciaux[now.day]}, nous lançons une **quête surprise** ! 🎉\n"
-                question_surprise += f"**Objectif** : Soyez le premier à poster une capture d'écran de votre souris portant un chapeau de Noël dans le salon <#{CHANNEL_PARTICIPATION}>.\n"
-                question_surprise += f"**Récompense** : Le gagnant recevra un lot exclusif en plus des tirages habituels ! 🎁\n"
-                question_surprise += f"Bonne chance à toutes et à tous ! :tada:\n"
-                question_surprise += f"<:space:1360661681583165470>"
-                await channel.send(question_surprise)
+                quete_surprise = f"## :sparkles: La quête surprise du {get_today_str()} décembre 🙀\n"
+                quete_surprise += f"Pour célébrer ce jour spécial {jours_speciaux[now.day]}, nous lançons une **quête surprise** ! 🎉\n"
+                quete_surprise += f"**Objectif** : {quetes[str(now.day)]['objectif']}\n"
+                quete_surprise += f"**Récompense** : {quetes[str(now.day)]['recompense']} 🎁\n"
+                quete_surprise += f"Bonne chance à toutes et à tous ! :tada:\n"
+                quete_surprise += f"<:space:1360661681583165470>"
+                await channel.send(quete_surprise)
+
+                if 'photo' in quetes[str(now.day)]:
+                    photo_path = quetes[str(now.day)]['photo']
+                    with open(photo_path, "rb") as f:
+                        await channel.send(file=discord.File(f, "quete.png"))
+                        await channel.send("<:space:1360661681583165470>")
 
             # ---- Envoi de la question du jour ----
             question = get_today_question()
@@ -452,8 +490,10 @@ async def send_message():
                 image_buffer = generer_image_avec_date()
                 file = discord.File(image_buffer, filename="banniere_date.png")
                 await channel.send(file=file)
-                # f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str()} décembre :confetti_ball:\n"
-                await channel.send(f"### **Les participations sont ouvertes !**\n"
+                
+                await channel.send(f"<:space:1360661681583165470>\n"
+                + f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str()} décembre :confetti_ball:\n"
+                + f"### **Les participations sont ouvertes !**\n"
                 + f"> Vous pouvez maintenant **tenter votre chance** pour remporter les <#1434986755282440264> de ce jour en **écrivant un message** dans ce salon. Bonne chance à toutes et à tous. :tada:\n")
 
         elif now.hour == heure_fin_participation and now.minute == 0:

@@ -107,7 +107,7 @@ def generer_image_avec_date(texte: str | None = None):
             font_date = ImageFont.load_default()
     else:
         try:
-            font_date = ImageFont.truetype(FONT_PATH, int(FONT_SIZE_DATE * 1.15))
+            font_date = ImageFont.truetype(FONT_PATH, int(FONT_SIZE_DATE * 1.05))
         except Exception:
             font_date = ImageFont.load_default()
     w_d, h_d = get_size(texte_date, font_date)
