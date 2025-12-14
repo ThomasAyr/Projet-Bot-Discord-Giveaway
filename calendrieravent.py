@@ -136,9 +136,9 @@ def is_participation_valid(message_time):
     heure_valide = heure_debut_participation <= message_time.hour < heure_fin_participation
     return date_valide and heure_valide
 
-def get_today_str():
+def get_today_str(title: bool = False) -> str:
     day = datetime.now().day  # renvoie un entier, 1 pour le 1er
-    if day == 1:
+    if day == 1 and title:
         return "1er"
     return str(day)
 
@@ -152,11 +152,15 @@ def already_participated(user_display, today):
 
 # Ajouter un participant
 def add_participant(user_display, today, message, msg_time):
+    if today == "1er":
+        today = 1
     participants_sheet.append_row([user_display, int(today), message, msg_time])
 
 # Tirage au sort des lots
 def draw_lots():
     today = get_today_str()
+    if today == "1er":
+        today = 1
     # Récupérer les participants du jour
     all_values = participants_sheet.get_all_values()
     participants_today = [row[0] for row in all_values if len(row) >= 2 and row[1] == today]
@@ -175,7 +179,7 @@ def draw_lots():
             type = lot_row[4] if len(lot_row) > 4 else ""
             commentaire = lot_row[5] if len(lot_row) > 5 else ""
 
-            participants_today_sans_le_donateur = [p for p in participants_today if p not in donateur]
+            participants_today_sans_le_donateur = [p for p in participants_today if p != donateur]
             winner = random.choice(participants_today_sans_le_donateur)
 
             results.append((lot, part, donateur, winner, type, commentaire))
@@ -187,6 +191,8 @@ def draw_lots():
 
 def draw_roue():
     today = get_today_str()
+    if today == "1er":
+        today = 1
     # Récupérer les participants du jour
     all_values = participants_sheet.get_all_values()
     participants_today = [row[0] for row in all_values if len(row) >= 2 and row[1] == today]
@@ -217,6 +223,8 @@ async def on_message(message):
         if now.day >= 1 and now.day <= 25: # durant le calendrier de l'Avent du 1er au 25 décembre
             user_display = message.author.display_name
             today = get_today_str()
+            if today == "1er":
+                today = 1
             time_str = (message.created_at + timedelta(hours=1)).strftime("%H:%M:%S")
             msg_time = message.created_at + timedelta(hours=1) #heure française hiver
             
@@ -227,7 +235,7 @@ async def on_message(message):
             print(f"Message de {user_display} {time_str} {msg_time} {message.content}")
 
             if is_participation_valid(msg_time):
-                organisateurs = ["Tagathe#0000", "Cillanne#0010", "Wonder#0010", "Xxthomatexx#0000"]
+                organisateurs = ["Tagathe#0000", "Cillanne#0010", "Wonder#0010", "Xxthomatexx#0000", "Myoseis#0095", "Lanoisette#0000", "Rio#0010"]
                 if already_participated(user_display, today) and user_display not in organisateurs:
                     await message.add_reaction("❌")
                     await message.reply("Ta participation a déjà été prise en compte aujourd'hui.")
@@ -258,29 +266,29 @@ async def on_message(message):
 quetes = {
   "6": {
     "evenement": "Saint Nicolas",
-    "objectif": "Résoudre le labyrinthe ci-dessous puis l’envoyer en MP à un organisateur.",
+    "objectif": "Résoudre le labyrinthe ci-dessous puis l’envoyer en message privé à **Xxthomatexx**. *Il suffit d'être le plus rapide !*",
     "recompense": "Un item au choix pour les trois premiers à l'envoyer correctement.",
     "photo": "cal2025/laby.png"
   },
   "8": {
     "evenement": "Fête des lumières",
-    "objectif": "Créer une tenue sur le thème de la lumière et l’envoyer en même temps que sa #participation. *Participations acceptées jusqu’à demain soir 21:59*",
-    "recompense": "Un item au choix pour les plus trois plus belles tenues."
+    "objectif": "Créer une tenue sur le thème de la lumière et l’envoyer en même temps que votre participation journalière. *Date limite : 10 décembre à 21:59.*",
+    "recompense": "Un item au choix pour les trois plus belles tenues sélectionnées."
   }
   ,
   "21": {
     "evenement": "Arrivée de l’hiver",
-    "objectif": "Écrire un haïku sur le thème de l’hiver et le poster en même temps que sa #participation. *Participations acceptées jusqu’à demain soir 21:59*",
+    "objectif": "Écrire un haïku sur le thème de l’hiver et le poster en même temps que votre participation journalière. *Date limite : 23 décembre à 21:59.*",
     "recompense": "Un item au choix pour les trois plus beaux haïkus sélectionnés."
   },
   "24": {
     "evenement": "Réveillon de Noël",
-    "objectif": "Poster une photo de votre sapin (ou celui de votre ville) en même temps que sa #participation. *Participations acceptées jusqu’au 25 décembre à 21:59.*",
+    "objectif": "Poster une photo de votre sapin (ou celui de votre ville) dans le canal Discord <#1434958487686746223> en même temps que votre participation journalière. *Date limite : 26 décembre à 21:59.*",
     "recompense": "Un item au choix pour les trois plus belles photos."
   },
   "25": {
     "evenement": "Jour de Noël",
-    "objectif": "Poster une photo de votre sapin (ou celui de votre ville) en même temps que sa #participation.",
+    "objectif": "Poster une photo de votre sapin (ou celui de votre ville) dans le canal Discord <#1434958487686746223>. *Date limite : 26 décembre à 21:59.",
     "recompense": "Un item au choix pour les trois plus belles photos."
   }
 }
@@ -302,13 +310,13 @@ async def draw_lots_task():
 
             await channel.send(
                 f"<:space:1360661681583165470>\n"
-                f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str()} décembre :confetti_ball:\n"
+                f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str(True)} décembre :confetti_ball:\n"
                 f"Ce soir, **{nb_participants} participants** ont tenté leur chance pour être tiré au sort ! "
                 f"**Plusieurs lots sont en jeu**, et la tension monte à **chaque pseudonyme annoncé**... "
                 f"\nQui décrochera le premier ? Qui repartira avec le plus convoité ?\n"
                 f"Le **hasard** est prêt à faire des **heureux**... préparez-vous ! 🎉\n<:space:1360661681583165470>"
             )
-            msg = f"## :sparkles: Les tirages au sort du {get_today_str()} décembre 🎁\n\n"
+            msg = f"## :sparkles: Les tirages au sort du {get_today_str(True)} décembre 🎁\n\n"
 
             # Résultats du tirage
             for lot, part, donateur, winner, type, commentaire in results:
@@ -338,7 +346,7 @@ async def draw_lots_task():
             if roue_winner: 
                 # Message narratif
                 await channel.send(
-                    f"## :sparkles: La roue des cadeaux du {get_today_str()} décembre :wheel:\n"
+                    f"## :sparkles: La roue des cadeaux du {get_today_str(True)} décembre :wheel:\n"
                     f"Ho ho ho ! Le moment tant attendu est arrivé. Il est maintenant l'heure de **lancer la roue des cadeaux** ! 🎁🎄\n"
                     f"Et la roue s'arrête... sur...\n"
                 )
@@ -366,8 +374,8 @@ async def draw_lots_task():
 
             # ---- Envoi de la quête surprise ----
             if now.day in jours_speciaux:
-                quete_surprise = f"## :sparkles: La quête surprise du {get_today_str()} décembre 🙀\n"
-                quete_surprise += f"Pour célébrer ce jour spécial {jours_speciaux[now.day]}, nous lançons une **quête surprise** ! 🎉\n"
+                quete_surprise = f"## :sparkles: La quête surprise du {get_today_str(True)} décembre 🙀\n"
+                quete_surprise += f"Pour célébrer ce jour spécial {jours_speciaux[now.day]}, nous lançons une **quête surprise** facultative ! 🎉"
                 quete_surprise += f"**Objectif** : {quetes[str(now.day)]['objectif']}\n"
                 quete_surprise += f"**Récompense** : {quetes[str(now.day)]['recompense']} 🎁\n"
                 quete_surprise += f"Bonne chance à toutes et à tous ! :tada:\n"
@@ -384,7 +392,7 @@ async def draw_lots_task():
             question = get_today_question()
             if question:
                 await channel.send(
-                    f"## :sparkles: La question du jour du {get_today_str()} décembre :interrobang:\n"
+                    f"## :sparkles: La question du jour du {get_today_str(True)} décembre :interrobang:\n"
                     f"> **{question}**\n\n"
                     f"Vous **pouvez y répondre** dans <#{QUESTION_DISCUSSION_CHANNEL_ID}>. Nous avons hâte de **lire vos réponses** ! :confetti_ball:"
                     f"\n<:space:1360661681583165470>"
@@ -434,7 +442,7 @@ async def update_lots_task():
     all_rows = technique_sheet.get_all_values()
     
     for row in all_rows[1:]:  # on saute l'en-tête
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
 
         # Nettoyer l'ID du message
         msg_id_clean = row[0].replace(" ", "").replace("\u202f", "")
@@ -455,20 +463,33 @@ async def update_lots_task():
         day_str = "1er" if jour == 1 else str(jour)
         
         # Construire l'en-tête
-        if jours_speciaux.get(jour, '') != '':
-            header = f"### {day_name} {day_str} décembre 2025 :\n> **{jours_speciaux[jour]}**\n\n"
+        if jour == 1:
+            header = ""
         else:
-            header = f"### {day_name} {day_str} décembre 2025 :\n"
+            header = "<:space:1360661681583165470>\n"
+
+        if jours_speciaux.get(jour, '') != '':
+            header += f"### {day_name} {day_str} décembre 2025 :\n\> **__{jours_speciaux[jour]}__**\n\n"
+        else:
+            header += f"### {day_name} {day_str} décembre 2025 :\n"
 
         # Construire la liste des lots
         if rewards_today:
             lines = []
             for r in rewards_today:
+                #mentionner le donateur si exsite sur le discord 
+                pseudo = r[3]
+                if r[3] != "":  
+                    member_donateur = discord.utils.get(channel.guild.members, display_name=r[3])
+                    if member_donateur:
+                        pseudo = f"{member_donateur.mention}"
+
                 if r[5] != "":
-                    lines.append(f"- {r[4]} **{r[1]}** ({r[5]}) {r[2]} {r[3]}")
+                    lines.append(f"- {r[4]} **{r[1]}** ({r[5]}) {r[2]} {pseudo}")
                 else:
-                    lines.append(f"- {r[4]} **{r[1]}** {r[2]} {r[3]}")
+                    lines.append(f"- {r[4]} **{r[1]}** {r[2]} {pseudo}")
             content = header + "\n".join(lines)
+
         else:
             content = header + "- *Pour l’instant, il n'y a pas de lot prévu. Mais vous pouvez en offrir un si vous le souhaitez !*"
 
@@ -492,14 +513,14 @@ async def send_message():
                 await channel.send(file=file)
                 
                 await channel.send(f"<:space:1360661681583165470>\n"
-                + f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str()} décembre :confetti_ball:\n"
+                + f"# :christmas_tree::sparkles: Le Calendrier de l'Avent du {get_today_str(True)} décembre :confetti_ball:\n"
                 + f"### **Les participations sont ouvertes !**\n"
                 + f"> Vous pouvez maintenant **tenter votre chance** pour remporter les <#1434986755282440264> de ce jour en **écrivant un message** dans ce salon. Bonne chance à toutes et à tous. :tada:\n")
 
         elif now.hour == heure_fin_participation and now.minute == 0:
             channel = bot.get_channel(CHANNEL_PARTICIPATION)
             if channel:
-                await channel.send(f"Fin des participations du {get_today_str()} décembre. Les tirages au sort ont lieu en ce moment. Restez connectés pour découvrir les heureux gagnants ! 🎁")
+                await channel.send(f"Fin des participations du {get_today_str(True)} décembre. Les tirages au sort ont lieu en ce moment. Restez connectés pour découvrir les heureux gagnants ! 🎁")
 
 @bot.event
 async def on_guild_join(guild):
